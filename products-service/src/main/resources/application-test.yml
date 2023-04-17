@@ -4,11 +4,17 @@ micronaut:
 
 grpc:
   server:
-    port: 50052
+    for-port: 50052
   channels:
-    productservice:
-      target: '${KEY_MANAGER_HOST:localhost}:${KEY_MANAGER_PORT:50052}' # localhost:50052
+    productService:
+      target: localhost:50052
       plaintext: true
+#  channels:
+#    productservice:
+#      target: "https://localhost:5001"
+#      plaintext: true
+#    keyManager:
+#      address: '${KEY_MANAGER_HOST:localhost}:${KEY_MANAGER_PORT:50052}'
 
 
 datasources:

@@ -2,19 +2,24 @@ syntax = "proto3";
 
 option java_multiple_files = true;
 option java_package = "br.com.softwalter";
-option java_outer_classname = "ProductsService";
-option objc_class_prefix = "HLW";
+//option java_outer_classname = "Products";
+//option objc_class_prefix = "HLW";
 
 package br.com.softwalter;
 
-service ProductsServiceService {
-  rpc send (ProductsServiceRequest) returns (ProductsServiceReply) {}
+service ProductsService {
+  rpc Create (ProductsServiceRequest) returns (ProductsServiceReply) {}
 }
 
 message ProductsServiceRequest {
   string name = 1;
+  double price = 2;
+  int32 quantity_in_stock = 3;
 }
 
 message ProductsServiceReply {
-  string message = 1;
+  int64 product_id = 1;
+  string name = 2;
+  double price = 3;
+  int32 quantity_in_stock = 4;
 }

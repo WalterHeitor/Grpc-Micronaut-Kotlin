@@ -1,4 +1,6 @@
 import com.google.protobuf.gradle.*
+
+
 plugins {
     id("org.jetbrains.kotlin.jvm") version "1.6.21"
     id("org.jetbrains.kotlin.kapt") version "1.6.21"
@@ -34,6 +36,7 @@ dependencies {
     runtimeOnly("com.fasterxml.jackson.module:jackson-module-kotlin")
 
     testImplementation("io.micronaut:micronaut-http-client")
+    testImplementation("org.mockito:mockito-core")
 
 }
 
