@@ -2,6 +2,8 @@ package br.com.softwalter.controller
 
 
 import br.com.softwalter.ByIdRequest
+import br.com.softwalter.Empty
+import br.com.softwalter.ProductsList
 import br.com.softwalter.ProductsServiceGrpc
 import br.com.softwalter.ProductsServiceReply
 import br.com.softwalter.ProductsServiceRequest
@@ -11,11 +13,12 @@ import br.com.softwalter.controller.dto.ProductUpdateRequest
 import br.com.softwalter.domain.excetption.BaseBusinessException
 import br.com.softwalter.domain.service.ProductService
 import br.com.softwalter.domain.util.ValidationUtil
+import io.grpc.Status
 import io.grpc.stub.StreamObserver
 import io.micronaut.grpc.annotation.GrpcService
 
 @GrpcService
-class ProductController(private val productService: ProductService) : ProductsServiceGrpc.ProductsServiceImplBase(){
+class ProductController(private val productService: ProductService) : ProductsServiceGrpc.ProductsServiceImplBase() {
 
     override fun create(request: ProductsServiceRequest?, responseObserver: StreamObserver<ProductsServiceReply>?) {
         try {
@@ -37,6 +40,9 @@ class ProductController(private val productService: ProductService) : ProductsSe
                     ex.statusCode().toStatus()
                             .withDescription(ex.errorMenssage()).asRuntimeException()
             )
+        } catch (ex: Throwable) {
+            responseObserver?.onError(Status.UNKNOWN.code.toStatus()
+                    .withDescription("Internal server error").asException())
         }
     }
 
@@ -58,6 +64,9 @@ class ProductController(private val productService: ProductService) : ProductsSe
                     ex.statusCode().toStatus()
                             .withDescription(ex.errorMenssage()).asRuntimeException()
             )
+        } catch (ex: Throwable) {
+            responseObserver?.onError(Status.UNKNOWN.code.toStatus()
+                    .withDescription("Internal server error").asException())
         }
     }
 
@@ -86,6 +95,52 @@ class ProductController(private val productService: ProductService) : ProductsSe
                     ex.statusCode().toStatus()
                             .withDescription(ex.errorMenssage()).asRuntimeException()
             )
+        } catch (ex: Throwable) {
+            responseObserver?.onError(Status.UNKNOWN.code.toStatus()
+                    .withDescription("Internal server error").asException())
+        }
+    }
+
+    override fun delete(request: ByIdRequest?, responseObserver: StreamObserver<Empty>?) {
+        try {
+            productService.deleteProductById(request!!.productId)
+
+            responseObserver?.onNext(Empty.newBuilder().build())
+            responseObserver?.onCompleted()
+        } catch (ex: BaseBusinessException) {
+            responseObserver?.onError(
+                    ex.statusCode().toStatus()
+                            .withDescription(ex.errorMenssage()).asRuntimeException()
+            )
+        } catch (ex: Throwable) {
+            responseObserver?.onError(Status.UNKNOWN.code.toStatus()
+                    .withDescription("Internal server error").asException())
+        }
+    }
+
+    override fun findAll(request: Empty?, responseObserver: StreamObserver<ProductsList>?) {
+        try {
+            val productResponseList = productService.findAll()
+
+            val serviceReplyList = productResponseList.map {
+                ProductsServiceReply.newBuilder()
+                        .setProductId(it.productId)
+                        .setName(it.name)
+                        .setPrice(it.price)
+                        .setQuantityInStock(it.quantityInStock)
+                        .build()
+            }
+            val productsList = ProductsList.newBuilder().addAllProducts(serviceReplyList).build()
+            responseObserver?.onNext(productsList)
+            responseObserver?.onCompleted()
+        } catch (ex: BaseBusinessException) {
+            responseObserver?.onError(
+                    ex.statusCode().toStatus()
+                            .withDescription(ex.errorMenssage()).asRuntimeException()
+            )
+        } catch (ex: Throwable) {
+            responseObserver?.onError(Status.UNKNOWN.code.toStatus()
+                    .withDescription("Internal server error").asException())
         }
     }
 }

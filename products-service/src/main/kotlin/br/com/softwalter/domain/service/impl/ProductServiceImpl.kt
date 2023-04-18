@@ -9,7 +9,6 @@ import br.com.softwalter.domain.repositories.ProductRepository
 import br.com.softwalter.domain.service.ProductService
 import br.com.softwalter.domain.util.toDomain
 import br.com.softwalter.domain.util.toProductResponse
-import io.micronaut.data.annotation.Repository
 import jakarta.inject.Singleton
 import org.slf4j.LoggerFactory
 
@@ -28,12 +27,12 @@ class ProductServiceImpl(private val productRepository: ProductRepository) : Pro
 
         logger.info("Product saved, return object response")
         return product
-                 .toProductResponse()
+                .toProductResponse()
     }
 
     override fun findById(productId: Long): ProductResponse {
         val findById = productRepository.findById(productId)
-        findById.orElseThrow {ProductNotFoundException(productId)        }
+        findById.orElseThrow { ProductNotFoundException(productId) }
         return findById.get().toProductResponse()
     }
 
@@ -45,6 +44,20 @@ class ProductServiceImpl(private val productRepository: ProductRepository) : Pro
                 price = requestUpdate.price,
                 quantityInStock = requestUpdate.quantityInStock)
         return productRepository.update(copy).toProductResponse()
+    }
+
+    override fun deleteProductById(byIdRequest: Long) {
+        val product = productRepository.findById(byIdRequest)
+                .orElseThrow { ProductNotFoundException(byIdRequest) }
+        return productRepository.delete(product)
+    }
+
+    override fun findAll(): List<ProductResponse> {
+        val products = productRepository.findAll()
+
+        return products.map {
+            it.toProductResponse()
+        }
     }
 
     private fun verifiName(name: String) {

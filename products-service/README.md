@@ -22,4 +22,4 @@
 	"name": "Coca-Cola",
 	"price": 12.9,
 	"quantity_in_stock": 33
-}'
+} '

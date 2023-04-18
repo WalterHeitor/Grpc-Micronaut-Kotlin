@@ -1,5 +1,6 @@
 package br.com.softwalter.domain.service.impl
 
+import br.com.softwalter.Empty
 import br.com.softwalter.domain.excetption.AlreadyExistsException
 import br.com.softwalter.domain.excetption.ProductNotFoundException
 import br.com.softwalter.domain.repositories.ProductRepository
@@ -100,4 +101,38 @@ internal class ProductServiceImplTest {
 
         Assertions.assertEquals(input.name, actual.name)
     }
+
+    @Test
+    fun `when delete method is call with valid id the product deleted` (){
+
+        val input = 1L
+        val output = ProductMockFactory.createProductOutput()
+
+        Mockito.`when`(productRepository.findById(input))
+                .thenReturn(Optional.of(output))
+
+        Assertions.assertDoesNotThrow{
+            productService.deleteProductById(input)
+        }
+    }
+
+    @Test
+    fun `when delete method is a call, with id invalid throws ProductNotFoundException`() {
+        Assertions.assertThrowsExactly(ProductNotFoundException::class.java) {
+            productService.deleteProductById(1000L)}
+    }
+
+    @Test
+    fun `when findAll method is call, a ProductResponse is returned` (){
+
+        val outputUpdate = ProductMockFactory.findAll()
+
+        Mockito.`when`(productRepository.findAll())
+                .thenReturn(outputUpdate)
+        val actual = productService.findAll()
+
+        Assertions.assertEquals(outputUpdate!![0].name, actual[0].name)
+    }
+
+
 }

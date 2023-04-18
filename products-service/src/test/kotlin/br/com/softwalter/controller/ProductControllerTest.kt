@@ -1,6 +1,7 @@
 package br.com.softwalter.controller
 
 import br.com.softwalter.ByIdRequest
+import br.com.softwalter.Empty
 import br.com.softwalter.ProductsServiceGrpc.ProductsServiceBlockingStub
 import br.com.softwalter.ProductsServiceRequest
 import br.com.softwalter.ProductsServiceUpdateRequest
@@ -12,6 +13,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrowsExactly
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertDoesNotThrow
 
 @MicronautTest
 internal class ProductControllerTest(
@@ -134,4 +136,22 @@ internal class ProductControllerTest(
         assertEquals(description, assertThrowsExactly.status.description)
     }
 
+    @Test
+    fun `when ProductsServiceGrpc delete method is call with valid data a success is returned`() {
+
+        val productsServiceRequest = ByIdRequest.newBuilder()
+                .setProductId(2L)
+                .build()
+
+        assertDoesNotThrow { productsServiceBlockingStub.delete(productsServiceRequest) }
+    }
+
+    @Test
+    fun `when ProductsServiceGrpc findAll method is call, a success returned`() {
+
+        val request = Empty.newBuilder().build()
+        val actual = productsServiceBlockingStub.findAll(request)
+
+        assertEquals("product name", actual.getProducts(0).name)
+    }
 }

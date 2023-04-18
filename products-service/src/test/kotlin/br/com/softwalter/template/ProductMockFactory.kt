@@ -57,4 +57,12 @@ object ProductMockFactory {
     fun updateProductUpdateRequest(): ProductUpdateRequest {
         return ProductUpdateRequest(1, "Update-Coca cola", 12.00, 30 )
     }
+
+    fun findAll(): MutableList<Product>? {
+        val product = Product(1, "Coca cola", 12.00, 30)
+        val product2 = Product(2, "Fanta", 12.00, 30)
+        val product3 = Product(3, "Pepis", 12.00, 30)
+
+        return mutableListOf(product, product2, product3)
+    }
 }
