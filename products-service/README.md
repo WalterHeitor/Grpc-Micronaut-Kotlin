@@ -12,4 +12,14 @@
 
 - [Micronaut Hikari JDBC Connection Pool documentation](https://micronaut-projects.github.io/micronaut-sql/latest/guide/index.html#jdbc)
 
+### Criando novo Filme
 
+```grpc
+
+  --url 0.0.0.0:50051/br.com.softwalter.ProductsService.Create \
+  --header 'Content-Type: application/json' \
+  --data '{
+	"name": "Coca-Cola",
+	"price": 12.9,
+	"quantity_in_stock": 33
+}'

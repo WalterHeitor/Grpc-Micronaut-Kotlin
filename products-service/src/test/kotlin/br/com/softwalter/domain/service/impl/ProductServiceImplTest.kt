@@ -62,4 +62,42 @@ internal class ProductServiceImplTest {
         val id = 1L
         Assertions.assertThrowsExactly(ProductNotFoundException::class.java) {productService.findById(id)}
     }
+
+    @Test
+    fun `when update method is call with duplicated product-name, throw AlreadyExistsException` (){
+
+        val request = ProductMockFactory.createProductUpdateRequest()
+        val input = ProductMockFactory.createProductInput()
+        val output = ProductMockFactory.createProductOutput()
+
+        Mockito.`when`(productRepository.findByNameIgnoreCase(input.name))
+                .thenReturn(output)
+
+        Assertions.assertThrowsExactly(AlreadyExistsException::class.java) {
+            productService.updateProduct(request)
+        }
+    }
+
+    @Test
+    fun `when upadate method is a call with id invalid throws ProductNotFoundException`() {
+        Assertions.assertThrowsExactly(ProductNotFoundException::class.java) {
+            productService.updateProduct(ProductMockFactory.createProductUpdateRequest())}
+    }
+
+    @Test
+    fun `when update method is call with valid data a ProductResponse is returned` (){
+
+        val request = ProductMockFactory.updateProductUpdateRequest()
+        val input = ProductMockFactory.updateProductInput()
+        val findByIdoutput = ProductMockFactory.createProductOutput()
+        val outputUpdate = ProductMockFactory.updateProductOutput()
+
+        Mockito.`when`(input.productId?.let { productRepository.findById(it) })
+                .thenReturn(Optional.of(findByIdoutput))
+        Mockito.`when`(productRepository.update(input))
+                .thenReturn(outputUpdate)
+        val actual = productService.updateProduct(request)
+
+        Assertions.assertEquals(input.name, actual.name)
+    }
 }

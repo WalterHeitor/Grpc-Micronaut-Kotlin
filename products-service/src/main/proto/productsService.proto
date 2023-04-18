@@ -9,10 +9,14 @@ package br.com.softwalter;
 
 service ProductsService {
   rpc Create (ProductsServiceRequest) returns (ProductsServiceReply) {}
-  rpc FindById (FindByIdServiceRequest) returns (ProductsServiceReply) {}
+  rpc FindById (ByIdRequest) returns (ProductsServiceReply) {}
+  rpc Update (ProductsServiceUpdateRequest) returns (ProductsServiceReply) {}
+  rpc Delete (ByIdRequest) returns (Empty) {}
 }
 
-message FindByIdServiceRequest {
+message Empty {}
+
+message ByIdRequest {
   int64 product_id = 1;
 }
 

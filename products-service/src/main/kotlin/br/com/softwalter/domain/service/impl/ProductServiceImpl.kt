@@ -2,6 +2,7 @@ package br.com.softwalter.domain.service.impl
 
 import br.com.softwalter.controller.dto.ProductRequest
 import br.com.softwalter.controller.dto.ProductResponse
+import br.com.softwalter.controller.dto.ProductUpdateRequest
 import br.com.softwalter.domain.excetption.AlreadyExistsException
 import br.com.softwalter.domain.excetption.ProductNotFoundException
 import br.com.softwalter.domain.repositories.ProductRepository
@@ -34,6 +35,16 @@ class ProductServiceImpl(private val productRepository: ProductRepository) : Pro
         val findById = productRepository.findById(productId)
         findById.orElseThrow {ProductNotFoundException(productId)        }
         return findById.get().toProductResponse()
+    }
+
+    override fun updateProduct(requestUpdate: ProductUpdateRequest): ProductResponse {
+        verifiName(requestUpdate.name)
+        val product = productRepository.findById(requestUpdate.productId)
+                .orElseThrow { ProductNotFoundException(requestUpdate.productId) }
+        val copy = product.copy(name = requestUpdate.name,
+                price = requestUpdate.price,
+                quantityInStock = requestUpdate.quantityInStock)
+        return productRepository.update(copy).toProductResponse()
     }
 
     private fun verifiName(name: String) {

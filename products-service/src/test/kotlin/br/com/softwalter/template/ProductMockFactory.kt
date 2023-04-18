@@ -1,7 +1,9 @@
 package br.com.softwalter.template
 
 import br.com.softwalter.ProductsServiceRequest
+import br.com.softwalter.ProductsServiceUpdateRequest
 import br.com.softwalter.controller.dto.ProductRequest
+import br.com.softwalter.controller.dto.ProductUpdateRequest
 import br.com.softwalter.domain.entities.Product
 
 object ProductMockFactory {
@@ -24,5 +26,35 @@ object ProductMockFactory {
                 .setPrice(12.97)
                 .setQuantityInStock(14)
                 .build()
+    }
+
+    fun createProductServiceUpdateRequest(): ProductsServiceUpdateRequest? {
+        return ProductsServiceUpdateRequest.newBuilder()
+                .setProductId(1L)
+                .setName("Fanta Laranja")
+                .setPrice(18.93)
+                .setQuantityInStock(25)
+                .build()
+    }
+
+    fun createProductUpdateRequest(): ProductUpdateRequest {
+        return ProductUpdateRequest(
+                productId = 1L,
+                name = "Coca cola",
+                price = 18.93,
+                quantityInStock = 23
+        )
+    }
+
+    fun updateProductInput(): Product {
+        return Product(1, "Update-Coca cola", 12.00, 30 )
+    }
+
+    fun updateProductOutput(): Product? {
+        return Product(1, "Update-Coca cola", 12.00, 30 )
+    }
+
+    fun updateProductUpdateRequest(): ProductUpdateRequest {
+        return ProductUpdateRequest(1, "Update-Coca cola", 12.00, 30 )
     }
 }
