@@ -9,6 +9,11 @@ package br.com.softwalter;
 
 service ProductsService {
   rpc Create (ProductsServiceRequest) returns (ProductsServiceReply) {}
+  rpc FindById (FindByIdServiceRequest) returns (ProductsServiceReply) {}
+}
+
+message FindByIdServiceRequest {
+  int64 product_id = 1;
 }
 
 message ProductsServiceRequest {
@@ -18,6 +23,13 @@ message ProductsServiceRequest {
 }
 
 message ProductsServiceReply {
+  int64 product_id = 1;
+  string name = 2;
+  double price = 3;
+  int32 quantity_in_stock = 4;
+}
+
+message ProductsServiceUpdateRequest {
   int64 product_id = 1;
   string name = 2;
   double price = 3;

@@ -6,4 +6,5 @@ import br.com.softwalter.controller.dto.ProductResponse
 interface ProductService {
 
     fun createProduct(request: ProductRequest): ProductResponse
+    fun findById(productId: Long): ProductResponse
 }
